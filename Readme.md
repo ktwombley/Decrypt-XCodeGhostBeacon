@@ -1,10 +1,10 @@
-# Decode-XCodeGhostBeacon
+# Decrypt-XCodeGhostBeacon
 
 This software is a PowerShell [1] script which decodes the encrypted message the XCodeGhost malware [2] attempts to send to its command & control servers.
 
 ## Usage
 1. Export the beacon payload data in binary form into a file. This can be done with Wireshark or other network analysis tools.
-2. Source Decode-XCodeGhostBeacon.ps1 into your PowerShell session or script:
+2. Source Decrypt-XCodeGhostBeacon.ps1 into your PowerShell session or script:
 ```PowerShell
 PS C:\> .\Decrypt-XCodeGhostBeacon.ps1
 ```
@@ -14,11 +14,11 @@ PS C:\> Get-Content C:\payload.bin -Encoding Byte | Decrypt-XCodeGhostBeacon.ps1
 ```
 
 ## Technical Description
-Decode-XCodeGhost decrypts the malware payload by using the DES algorithm [3] in ECB mode with PKCS#7 padding using a key of "stringWithFormat". 
+Decrypt-XCodeGhost decrypts the malware payload by using the DES algorithm [3] in ECB mode with PKCS#7 padding using a key of "stringWithFormat". 
 
 This reveals the details of the infected iOS device and the name of the infected app. This information can be used to positively identify the infected iOS device, and then supplied to the user or IT helpdesk staff to positively identify the infected app(s) to remove from that device.
 
-Prior to the invention of Decode-XCodeGhostBeacon there were two main problems with the detection and elimination of the malware.
+Prior to the invention of Decrypt-XCodeGhostBeacon there were two main problems with the detection and elimination of the malware.
 
 First, detection systems typically can only detect the IP address of an infected device. Researchers have determined the destinations the malware sends its encrypted data to, so systems can reliably detect the malware by watching for communications to those specific destinations. When that communication is detected the IP address of the source (i.e. the infected device) is found. However, the devices are mobile and IP addresses are recycled when a device stops being used on a network. So, unless the owner can be found before the device leaves the network and the IP Address is recycled, detection relies on having a flawless audit history mapping historic IP address usage to an actual user’s name.
 
@@ -68,7 +68,7 @@ A security practitioner familiar with packet capturing and inspection will disco
 
 In one case, the name of the app was apparent (See figure 4). In another, the app’s name was written in Chinese and could not be written in an HTTP Header. Instead, it went through a process called URL encoding to produce the string "%E4%B8%8B%E5%8E%A8%E6%88%BF". URL decoding this string results in the Chinese characters "下厨房" which must be translated into English. In English, the phrase means "The Kitchen". A search of the iOS app store for "the Kitchen" reveals many results. [7]
  
-A more straight-forward way to determine the actual infected app would be to obtain the app’s bundle identifier as Decode-XCodeGhostBeacon does. The app’s bundle identifier must be globally unique to each app and contain only alphanumeric symbols, dashes, and periods [8]. Entering the app’s bundle identifier into a Google Search is often enough to definitively identify the infected app.
+A more straight-forward way to determine the actual infected app would be to obtain the app’s bundle identifier as Decrypt-XCodeGhostBeacon does. The app’s bundle identifier must be globally unique to each app and contain only alphanumeric symbols, dashes, and periods [8]. Entering the app’s bundle identifier into a Google Search is often enough to definitively identify the infected app.
 
 The decryption algorithm, DES, is a standard. Decrypt-XCodeGhostBeacon uses Windows’ built-in DES decryption routine which can be implemented by a developer familiar with development in .NET or Powershell. The key used to decrypt the payload was found included in the XCodeGhost source code posted online. [9]
 
