@@ -1,6 +1,6 @@
 ﻿#Copyright 2015 Mayo Foundation for Medical Education and Research
-# License: TBD
-# Author: Keith Twombley <Twombley.Keith@mayo.edu>
+# License: MIT
+# Author: Keith Twombley <ktwombley@gmail.com>
 
 <#
 .Synopsis
